@@ -1,0 +1,47 @@
+cff-version: 1.2.0
+message: "If you use Hydra-DP3, please cite the paper below."
+title: "Hydra-DP3: Frequency-Aware Right-Sizing of 3D Diffusion Policies for Visuomotor Control"
+type: software
+authors:
+  - family-names: Zhang
+    given-names: Jinhao
+  - family-names: Zhou
+    given-names: Zhexuan
+  - family-names: Li
+    given-names: Huizhe
+  - family-names: Lai
+    given-names: Yichen
+  - family-names: Xia
+    given-names: Wenlong
+  - family-names: Song
+    given-names: Haoming
+  - family-names: Gong
+    given-names: Youmin
+  - family-names: Mei
+    given-names: Jie
+repository-code: "https://github.com/jhz1192/HydraDP3"
+url: "https://arxiv.org/abs/2605.01581"
+preferred-citation:
+  type: article
+  title: "Hyper-DP3: Frequency-Aware Right-Sizing of 3D Diffusion Policies for Visuomotor Control"
+  authors:
+    - family-names: Zhang
+      given-names: Jinhao
+    - family-names: Zhou
+      given-names: Zhexuan
+    - family-names: Li
+      given-names: Huizhe
+    - family-names: Lai
+      given-names: Yichen
+    - family-names: Xia
+      given-names: Wenlong
+    - family-names: Song
+      given-names: Haoming
+    - family-names: Gong
+      given-names: Youmin
+    - family-names: Mei
+      given-names: Jie
+  journal: arXiv
+  year: 2026
+  doi: "10.48550/arXiv.2605.01581"
+  url: "https://arxiv.org/abs/2605.01581"
