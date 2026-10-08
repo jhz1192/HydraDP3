@@ -15,7 +15,9 @@ Robot action trajectories are smooth: in the paper's RoboTwin2.0 analysis, the f
 Hydra-DP3 combines the DP3 point-cloud encoder with a lightweight **Diffusion Mixer (DiM)** decoder. Each block mixes temporal and channel information, then injects conditioning through FiLM and a gated residual connection. The policy predicts clean action trajectories and uses **two-step DDIM inference**, without consistency distillation or MeanFlow training.
 
 <p align="center">
-  <img src="assets/overview.png" alt="Hydra-DP3 Diffusion Mixer architecture" width="800">
+  <a href="assets/architecture.pdf"><img src="assets/architecture.png" alt="Hydra-DP3 Diffusion Mixer architecture from arXiv v4, Figure 2" width="1000"></a>
+  <br>
+  <em>Architecture from <a href="https://arxiv.org/html/2605.01581v4#S4.F2">Figure 2 of arXiv v4</a>. <a href="assets/architecture.pdf">Vector PDF</a>.</em>
 </p>
 
 The paper reports **2.52M parameters**, **4.50 ms inference latency** on an RTX 5880 Ada at batch size 1, **63.2% average success on 50 RoboTwin2.0 tasks**, and **78.4% across 10 Adroit/MetaWorld tasks**. It also includes synthetic trajectory experiments and real-robot evaluations. See [Sections 4–6](https://arxiv.org/html/2605.01581v4#S4) for the analysis and experiments.
