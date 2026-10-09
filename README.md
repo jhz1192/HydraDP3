@@ -6,7 +6,7 @@
   <a href="https://www.apache.org/licenses/LICENSE-2.0"><img src="https://img.shields.io/badge/License-Apache%202.0-green" alt="Apache 2.0"></a>
 </p>
 
-**Hydra-DP3** is the project name used for the NeurIPS version. This README follows [arXiv:2605.01581v4](https://arxiv.org/abs/2605.01581v4), where the method is named **Hyper-DP3 (HDP3)**. All performance tables below refer to the paper's **2.52M-parameter model**.
+**Hydra-DP3** is a compact 3D diffusion policy for visuomotor control. Guided by the low-frequency structure of robot action trajectories, it combines point-cloud perception with a lightweight Diffusion Mixer decoder to generate actions in just two denoising steps.
 
 ## Overview
 
@@ -15,9 +15,9 @@ Robot action trajectories are smooth: in the paper's RoboTwin2.0 analysis, the f
 Hydra-DP3 combines the DP3 point-cloud encoder with a lightweight **Diffusion Mixer (DiM)** decoder. Each block mixes temporal and channel information, then injects conditioning through FiLM and a gated residual connection. The policy predicts clean action trajectories and uses **two-step DDIM inference**, without consistency distillation or MeanFlow training.
 
 <p align="center">
-  <a href="assets/architecture.pdf"><img src="assets/architecture.png" alt="Hydra-DP3 Diffusion Mixer architecture from arXiv v4, Figure 2" width="1000"></a>
+  <a href="assets/architecture.pdf"><img src="assets/architecture.png" alt="Hydra-DP3 architecture" width="1000"></a>
   <br>
-  <em>Architecture from <a href="https://arxiv.org/html/2605.01581v4#S4.F2">Figure 2 of arXiv v4</a>. <a href="assets/architecture.pdf">Vector PDF</a>.</em>
+  <em>Hydra-DP3 architecture. <a href="assets/architecture.pdf">PDF</a>.</em>
 </p>
 
 The paper reports **2.52M parameters**, **4.50 ms inference latency** on an RTX 5880 Ada at batch size 1, **63.2% average success on 50 RoboTwin2.0 tasks**, and **78.4% across 10 Adroit/MetaWorld tasks**. It also includes synthetic trajectory experiments and real-robot evaluations. See [Sections 4–6](https://arxiv.org/html/2605.01581v4#S4) for the analysis and experiments.
@@ -72,7 +72,7 @@ The paper uses **50 expert demonstrations per task** and evaluates each task on 
 
 ## Code release
 
-This repository provides the **RoboTwin2.0 policy implementation** carried forward from [PocketDP3](https://github.com/jhz1192/PocketDP3). The policy lives in `HydraDP3/`, its Python package is `hydra_diffusion_policy_3d`, and training and evaluation use `hydra_dp3.yaml`. The Adroit, MetaWorld, synthetic-data, and real-robot experiments are described in the paper; their experiment pipelines are not included in this release.
+This repository includes training and evaluation code for **RoboTwin2.0**. The policy implementation is in `HydraDP3/`. Code for the Adroit, MetaWorld, synthetic-data, and real-robot experiments is not included.
 
 ## Installation
 
@@ -106,7 +106,7 @@ cd ../../..
 # Now in HydraDP3/RoboTwin
 ```
 
-## Paper settings and reproduction
+## Training configuration
 
 The paper uses **DiM hidden width 128 and depth 6** (Section 6.1). Its RoboTwin2.0 settings are listed below, with the remaining hyperparameters from [Appendix C, Table 8](https://arxiv.org/html/2605.01581v4#A3.T8).
 
@@ -124,7 +124,7 @@ The paper uses **DiM hidden width 128 and depth 6** (Section 6.1). Its RoboTwin2
 | Weight decay / warmup steps | 1e-6 / 500 |
 | Learning-rate schedule | Cosine |
 
-**The inherited YAML defaults differ from the paper:** they use hidden width 64, depth 4, batch size 128, and 2 observation steps. Before training with the paper settings, edit these fields in the existing `RoboTwin/policy/HydraDP3/Hydra-3D-Diffusion-Policy/hydra_diffusion_policy_3d/config/hydra_dp3.yaml`, retaining all other fields:
+The default configuration uses hidden width 64, depth 4, batch size 128, and 2 observation steps. To use the settings above, update these fields in `RoboTwin/policy/HydraDP3/Hydra-3D-Diffusion-Policy/hydra_diffusion_policy_3d/config/hydra_dp3.yaml`, retaining all other fields:
 
 ```yaml
 n_obs_steps: 3
@@ -137,7 +137,14 @@ dataloader:
   batch_size: 256
 ```
 
-This is a field-update excerpt, not a replacement for the full configuration. The inherited settings already use a horizon of 8, 6 action steps, DDIM with 100 training steps and 2 inference steps, and the optimizer settings above. Keep the same model configuration for training and evaluation, since evaluation also reads `hydra_dp3.yaml`. **Parameter-count note:** Table 3 reports 2.52M parameters, while Appendix C specifies 3 observation steps. Instantiating this released implementation with width 128 and depth 6 gives **2,517,118 parameters with 2 observation steps**, or **2,533,502 with 3**. To use the architecture corresponding to the original 2.5171M result column, keep `n_obs_steps: 2`; the excerpt above follows the appendix's 3-step setting. The performance tables reproduce the paper's reported results and are not new benchmark runs of this repository.
+Keep the same configuration for training and evaluation, since both read `hydra_dp3.yaml`.
+
+<details>
+<summary>Observation steps and parameter count</summary>
+
+Table 3 reports 2.52M parameters, while Appendix C specifies 3 observation steps. With width 128 and depth 6, this implementation has 2,517,118 parameters with `n_obs_steps: 2`, or 2,533,502 with `n_obs_steps: 3`. The configuration excerpt above follows Appendix C. The results tables report the values from the paper.
+
+</details>
 
 ### Collect data
 
@@ -170,7 +177,7 @@ The included `pipeline.sh` runs its predefined **19-task subset**. It does not r
 
 ## Citation
 
-Please cite the linked arXiv paper. Its bibliographic title is retained below as published:
+If you find this work useful, please cite:
 
 ```bibtex
 @article{zhang2026hyperdp3,
@@ -187,7 +194,7 @@ Please cite the linked arXiv paper. Its bibliographic title is retained below as
 
 ## License
 
-This project follows the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) declaration in the original release.
+This project is licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
 
 ## Acknowledgments
 
